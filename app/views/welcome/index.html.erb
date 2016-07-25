@@ -1,0 +1,20 @@
+<% if user_signed_in? %>
+  <h1> Welcome <%= current_user.name %> </h1>
+
+  <%= form_tag({action: 'upload',controller: 'file'}, :multipart => true) do %>
+    <p><label for="upload_file">Select File</label>
+    <%= file_field 'upload', 'datafile' %></p>
+    <%= submit_tag "Upload" %>
+  <% end %>
+  <p>Your list of files </p>
+  <table style="table-layout: fixed; width:100%; margin:20px; " border="3" cellpadding="10">
+    <% current_user.uploaded_files.order(created_at: :desc).each do |file| %>
+      <%= render "file", file: file %>
+    <% end %>
+  </table>
+
+  <%= link_to('Logout', destroy_user_session_path) %>
+<% else %>
+  <h1> Please Login </h1>
+  <%= link_to('Login', new_user_session_path) %>  
+<% end %>
